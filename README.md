@@ -24,3 +24,4 @@ References:
 Here's what the output looks like: 
 
 ![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
+![Alt text](name-of-gif-file.gif) / ![](name-of-gif-file.gif)
