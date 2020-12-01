@@ -20,8 +20,3 @@ References:
 1) Balaji Srinivasan: https://www.youtube.com/watch?v=Ax6P93r32KU [Mask Detector on Python using TF 1.15.2]
 2) Murtaza's Workshop - Robotics and AI: https://www.youtube.com/watch?v=WQeoO7MI0Bs&t=9006s [Learn Open CV Basics]
 3) Adrian Rosebrock: https://www.pyimagesearch.com/2018/02/26/face-detection-with-opencv-and-deep-learning/ [Face detection with OpenCV and deep learning]
-
-Here's what the output looks like: 
-
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
-![Alt text](name-of-gif-file.gif) / ![](name-of-gif-file.gif)
