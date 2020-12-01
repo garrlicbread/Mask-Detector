@@ -4,6 +4,8 @@ This is a real time facemask detector built on python using MobileNetV2, OpenCv 
 Primarily, this tool predicts if a person is wearing a facemask or not.
 Secondly, it can tell if the person is wearing it properly. If the person isn't wearing it properly, it prompts the person to adjust it.
 
+To view the output gif, please see output.md in the repository.
+
 Known Issues:
 
 1) The Model assumes spectacles to be a part of a mask. Assumed reason being lack of training images of people with glasses.
