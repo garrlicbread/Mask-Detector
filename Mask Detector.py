@@ -56,15 +56,15 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator, img_to_arra
 from tensorflow.keras.layers import MaxPooling2D, AveragePooling2D, Dropout, Flatten, Dense, Input
 
 # Loading the training/test loss graph
-load_img(r"C:\Users\Sukant Sidnhwani\Desktop\Python\Projects\Mask Detector\Accuracy & Loss.png")
+load_img(r"C:\\Desktop\Projects\Mask Detector\Accuracy & Loss.png")
 
 # Loading the pre-trained Mask Detection model
-mask_detector_path = "C:/Users/Sukant Sidnhwani/Desktop/Python/Projects/Mask Detector/Saved Weights/Mask Detector.model"
+mask_detector_path = r"C\\Desktop\Python\Projects\Mask Detector\Saved Weights\Mask Detector.model"
 mask_detector_model = load_model(mask_detector_path)
 
 # Loading the pre-trained Caffe Model that detects faces
-prototxt_path = "C:/Users/Sukant Sidnhwani/Desktop/Python/Projects/Mask Detector/Face Detecting Pre-Trained Models/CAFFE Models/Res10/deploy1.prototxt"
-caffe_model_path = "C:/Users/Sukant Sidnhwani/Desktop/Python/Projects/Mask Detector/Face Detecting Pre-Trained Models/CAFFE Models/Res10/res10_300x300_ssd_iter_140000.caffemodel"
+prototxt_path = "C://Desktop/Python/Projects/Mask Detector/Face Detecting Pre-Trained Models/CAFFE Models/Res10/deploy.prototxt"
+caffe_model_path = "C://Desktop/Python/Projects/Mask Detector/Face Detecting Pre-Trained Models/CAFFE Models/Res10/res10_300x300_ssd_iter_140000.caffemodel"
 caffe_model = cv2.dnn.readNetFromCaffe(prototxt_path, caffe_model_path) 
 
 # Defining a function that detects a face and then predicts if that face has a mask
@@ -73,8 +73,8 @@ def face_and_mask_detection(video, facedetector, maskdetector):
     # avg = np.array(video).mean(axis=(0, 1)) 
     # Constructing input blob for the frames by resizing to a fixed 300 * 300 pixels and normalizing it.
     # Try removing the cv2.resize if any issues arise
-    blob = cv2.dnn.blobFromImage(cv2.resize(video, (224, 224)), 1.0, (224, 224), (100.0, 115.0, 125.0))        
-    #  Other averages: A) (100.0, 115.0, 125.0)  B) (100.0, 100.0, 100.0) C) (123.0, 135.0, 105.0)
+    blob = cv2.dnn.blobFromImage(cv2.resize(video, (300, 300)), 1.0, (224, 224), (100.0, 115.0, 125.0))        
+    #  Other  color average combinations to try: A) (100.0, 115.0, 125.0)  B) (100.0, 100.0, 100.0) C) (123.0, 135.0, 105.0)
     
     # Setting the blob as input 
     facedetector.setInput(blob) 
@@ -96,15 +96,10 @@ def face_and_mask_detection(video, facedetector, maskdetector):
             # Compute the (x, y) co-ords of bounding box for the object
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             (startX, startY, endX, endY) = box.astype("int")
-            
-            # Ensure the bounding boxes fall within frame dims
-            # (startX, startY) = (max(0, startX), max(0, startY))              # Uncomment this section if code doesn't run
-            # (endX, endY) = (min(w - 1, endX), min(h - 1, endY))
-            
+       
             # Pre-processing detected faces to predict mask probability
             face = video[startY:endY, startX:endX]
-            # face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
-            face = cv2.GaussianBlur(face, (5, 5), 0)
+            face = cv2.GaussianBlur(face, (5, 5), 0)  # Adding the blur improved performance on faces with beards. See Known issues in README.md to know more.
             face = cv2.resize(face, (224, 224))
             face = img_to_array(face)
             face = preprocess_input(face)
@@ -118,8 +113,7 @@ def face_and_mask_detection(video, facedetector, maskdetector):
             faces = np.array(faces, dtype = 'float32')
             predictions = maskdetector.predict(faces, batch_size = 32)
             predictions = list(predictions)
-            # predictions = np.amax(predictions)  # Uncomment if any issues arise
-            # predictions = round(predictions * 100, 2)
+
         return (locations, predictions)
     
 # Initializing ending time 
@@ -134,15 +128,15 @@ print(f"This model took {round(total_time, 2)} seconds to load.")
         
 # # For when using cv2.VideoCapture()
 # videocam = cv2.VideoCapture(0)
-# videocam.set(3, 1200)
-# videocam.set(4, 800)
+# videocam.set(3, 1280)
+# videocam.set(4, 720)
 
 # For when using imutils.video.VideoStream()
 videocam = VideoStream(src = 0, framerate = 32).start()
 
 # Looping over the frames from the Video stream
 while True:
-    frames = videocam.read() # When using imutils.video.Videostream
+    frames = videocam.read() # For when using imutils.video.Videostream
     # _, frames = videocam.read() # For when using cv2.VideoCam(0)
     frames = imutils.resize(frames, width = 1000, height = 1000)
     frames = cv2.flip(frames, 1)
@@ -163,10 +157,10 @@ while True:
         
         if mask >= 0.90:
             text = "Mask worn correctly. Model Surety: {:.2f}".format(max(mask, nomask) * 100)
-            color = (204, 209, 72)                # (187, 85, 186) 
+            color = (204, 209, 72)                
         elif nomask >= 0.70:
             text = "No mask detected. Model Surety: {:.2f}".format(max(mask, nomask) * 100)
-            color = (0, 69, 255)                  # (205, 92, 92) 
+            color = (0, 69, 255)                 
         elif mask < 0.90 and nomask < 0.70:
             text = "Please adjust your mask. Model Surety: {:.2f}".format(mask * 100)
             color = (0, 255, 255)
@@ -190,10 +184,10 @@ cv2.destroyAllWindows()
 
 # # Initializing hyperparameters and directories
 # # Default values commented out
-# epochs = 20                                       # 20
-# learning_rate = 0.0001                            # 1e-4
-# batch_size = 32                                   # 32
-# df_path = "D:\Big Datasets\Mask Dataset"
+# epochs = 30                                      
+# learning_rate = 0.0001                          
+# batch_size = 32                                
+# df_path = "D:\Datasets\Mask Dataset"
 # classes = ['With Mask', 'Without Mask']
 
 # print()
@@ -226,7 +220,6 @@ cv2.destroyAllWindows()
 # X_train, X_test, y_train, y_test = train_test_split(df, class_labels, test_size = 0.2, stratify = class_labels)
 
 # Training the model
-# We've already trained so it's commented out
 
 # # Data augmentation using ImageDataGenerator 
 # df_aug = ImageDataGenerator(rotation_range = 40,
@@ -235,7 +228,6 @@ cv2.destroyAllWindows()
 #                             height_shift_range = 0.2,
 #                             width_shift_range = 0.2,
 #                             horizontal_flip = True,
-#                             # vertical_flip = True,
 #                             fill_mode = "nearest")
 
 # # Loading Mobilenet model as the Base model (Head layers to be left off)
@@ -244,10 +236,10 @@ cv2.destroyAllWindows()
 
 # # Head model that will be placed on top of base model 
 # head_model = base_model.output
-# head_model = AveragePooling2D(pool_size = (7, 7))(head_model)  # MaxPooling2D(pool_size = (8, 8))
+# head_model = AveragePooling2D(pool_size = (7, 7))(head_model)          # Can try MaxPooling2D as well
 # head_model = Flatten(name = "Flatten")(head_model)                     
-# head_model = Dropout(0.3)(head_model)                                  # Dropout = 0.5 
-# head_model = Dense(units = 2, activation = "softmax")(head_model)      # Try "Sigmoid" as well
+# head_model = Dropout(0.3)(head_model)                                  # Default dropout = 0.5 
+# head_model = Dense(units = 2, activation = "softmax")(head_model)      # Can try "Sigmoid" as well
 
 # model = Model(inputs = base_model.inputs, outputs = head_model)
 
@@ -257,7 +249,7 @@ cv2.destroyAllWindows()
 #     layer.trainable = False
     
 # # Compiling the Model
-# model.compile(optimizer = Adam(lr = learning_rate,                      # Adamax
+# model.compile(optimizer = Adam(lr = learning_rate,                      # Can try Adamax as well
 #                                decay = learning_rate / epochs),
 #               loss = 'binary_crossentropy', 
 #               metrics = ['accuracy', 'mse'])
@@ -292,7 +284,6 @@ cv2.destroyAllWindows()
 ########################################################################################################################################################333
 
 # # Plotting the training loss and accuracy
-# Commenting out because it's already saved
 
 # plt.style.use("dark_background")
 # plt.figure(figsize=(12, 8))
@@ -307,11 +298,10 @@ cv2.destroyAllWindows()
  
 ################################################ Predicting a single demo image #######################################################
 
-# The following function and loop is for testing de
-# Comment this section out when done testing 
+# The following function and loop is for testing demo images
 
 # def demo_pred(number):
-#     demo = load_img(f"C:/Users/Sukant Sidnhwani/Desktop/Python/Projects/Mask Detector/Demo Images/Demo{number}.jpg",
+#     demo = load_img(f"C://Desktop/Python/Projects/Mask Detector/Demo Images/Demo{number}.jpg",                      # Change the path file to your demo images folder
 #                     target_size = (224, 224))
 #     demo = img_to_array(demo)
 #     demo = preprocess_input(demo)
