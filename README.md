@@ -11,12 +11,6 @@ Known Issues:
 1) The Model assumes spectacles to be a part of a mask. Assumed reason being lack of training images of people with glasses.
 2) Due to lack of bearded people without masks in the dataset, the model sometimes cannot differentiate between a thick beard and a mask.
 
-Notes:
-
-1) The Model is already trained so the saved model will be loaded. 
-2) The CNN Architecture is commented out. Scroll down to view the code.
-3) There is another section commented out which tests demo images and print if it detects a mask or not.
-
 References:
 
 1) Balaji Srinivasan: https://www.youtube.com/watch?v=Ax6P93r32KU [Mask Detector on Python using TF 1.15.2]
