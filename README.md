@@ -6,7 +6,7 @@ Secondly, it can tell if the person is wearing it properly. If the person isn't 
 
 PLEASE VIEW [OUTPUT.MD](https://github.com/garrlicbread/Mask-Detector/blob/main/Output.md) TO WATCH A GIF OF THE RESULT.
 
-
+[a relative link](Output.md)
 
 Known Issues:
 
