@@ -6,6 +6,8 @@ Secondly, it can tell if the person is wearing it properly. If the person isn't 
 
 PLEASE VIEW OUTPUT.MD TO WATCH A GIF OF THE RESULT.
 
+[a link](https://github.com/garrlicbread/Mask-Detector/blob/main/Output.md)
+
 Known Issues:
 
 1) The Model assumes spectacles to be a part of a mask. Assumed reason being lack of training images of people with glasses.
