@@ -14,4 +14,4 @@ Notes:
 yellow if the mask isn't worn correctly,
 and red if it does not detect a mask.
 
-2) Frames per seconds are low due to hardware being old. 
+2) Frames per seconds are low due to my hardware being old. 
